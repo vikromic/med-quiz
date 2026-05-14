@@ -93,6 +93,9 @@ Manual production deploy flow:
 ```bash
 npm run deploy:check
 git status --short
+git add path/to/changed-file path/to/changed-test
+git diff --cached --stat
+git commit -m "fix(app): describe the change"
 git push
 npx wrangler pages deploy dist --project-name=med-quiz --branch=main --commit-hash=$(git rev-parse HEAD)
 ```

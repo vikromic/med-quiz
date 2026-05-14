@@ -13,13 +13,9 @@ export interface ParseResult {
 const OPTION_IDS: OptionId[] = ["A", "B", "C", "D", "E"];
 const CYRILLIC_LABELS: Record<string, OptionId> = {
   "А": "A",
-  "а": "A",
   "В": "B",
-  "в": "B",
   "С": "C",
-  "с": "C",
   "Е": "E",
-  "е": "E",
 };
 
 interface OptionSlice {
@@ -166,6 +162,10 @@ function splitOptionSlices(body: string): { firstOptionIndex: number; options: O
 }
 
 function normalizeOptionLabel(marker: string, index: number): OptionId {
+  if (marker === "0") {
+    return "D";
+  }
+
   const upper = marker.toUpperCase();
   if (upper in CYRILLIC_LABELS) {
     return CYRILLIC_LABELS[upper];

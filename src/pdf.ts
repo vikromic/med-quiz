@@ -39,7 +39,10 @@ export async function parsePdfFromUrl(url: string, title: string): Promise<Quest
 
 export async function extractTextFromPdf(data: ArrayBuffer): Promise<string> {
   const pdfjs = await loadPdfJs();
-  const document = await pdfjs.getDocument({ data }).promise;
+  const document = await pdfjs.getDocument({
+    data,
+    verbosity: pdfjs.VerbosityLevel.ERRORS,
+  }).promise;
   const pages: string[] = [];
 
   for (let pageNumber = 1; pageNumber <= document.numPages; pageNumber += 1) {

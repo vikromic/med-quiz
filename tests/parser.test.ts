@@ -45,14 +45,14 @@ D. Діарея
     expect(result.questions[1].correctOptionId).toBe("B");
   });
 
-  it("normalizes Cyrillic option labels and assigns expected labels to OCR-like option markers", () => {
+  it("normalizes lowercase Cyrillic option labels and OCR-like option markers", () => {
     const text = `
 132. Укажіть дозволений максимальний відсоток заповнення ємності.
-А. 60%
-В. 75%*
-C. 50%
+а. 60%
+в. 75%*
+с. 50%
 0. 55%
-Е. 45%
+е. 45%
 `;
 
     const result = parseQuestionsFromText(text, source);

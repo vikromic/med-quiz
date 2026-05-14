@@ -140,11 +140,14 @@ Use this flow for every source change:
 cd /Users/viktoriiamalysheva/Workspace/Projects/med-quiz
 npm run deploy:check
 git status --short
-git add .
+git add path/to/changed-file path/to/changed-test
+git diff --cached --stat
 git commit -m "fix(app): describe the change"
 git push
 npx wrangler pages deploy dist --project-name=med-quiz --branch=main --commit-hash=$(git rev-parse HEAD)
 ```
+
+Replace the `git add` paths with the files actually changed. Do not stage unrelated local work.
 
 For documentation-only changes, deployment is optional because the live app bundle does not change. Still push the commit so GitHub has the latest runbook.
 
