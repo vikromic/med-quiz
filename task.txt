@@ -1,0 +1,132 @@
+. App Overview
+
+A mobile or web-based training app for test preparation using PDF files that already contain correct answers.
+Goal: fast memorization of correct answers through repetition and self-assessment.
+
+⸻
+
+2. Data Source
+
+Input:
+
+PDF files containing tests
+
+Each file includes:
+
+questions
+answer options
+correct answers (already highlighted in the PDF)
+
+Processing requirements:
+
+The app must parse PDF files and extract:
+questions
+answer options
+correct answers
+Extracted data should be stored in a structured format (e.g., JSON)
+
+⸻
+
+3. Test Modes
+
+3.1. Standard Mode (default)
+
+Test is generated from one selected PDF file
+
+3.2. Combined Mode
+
+User can select multiple or all files
+The app generates one long test combining all questions
+
+⸻
+
+4. Test Flow Logic
+
+Display:
+
+One question per screen
+List of answer options (radio buttons or tappable buttons)
+
+User interaction:
+
+User selects an answer
+User taps:
+“Check” or “Next” (can be combined into one button)
+
+After answering:
+
+If correct → highlight in green
+If incorrect →
+selected answer → red
+correct answer → green
+
+Navigation:
+
+“Next” button → moves to the next question
+
+⸻
+
+5. Progress & Statistics
+
+Displayed at the top of the screen:
+
+current question / total (e.g., 30/100)
+percentage of correct answers (e.g., 57%)
+
+Optional (recommended):
+
+number of correct / incorrect answers
+progress bar
+
+⸻
+
+6. Test Completion
+
+After finishing the test:
+
+final statistics:
+% correct
+number of mistakes
+
+Buttons:
+
+“Retry Test”
+“Review Mistakes Only”
+
+⸻
+
+7. Additional Features
+
+7.1. Shuffle
+
+random order of questions
+random order of answer options
+
+7.2. Explanations (future feature)
+
+optional short explanation for each answer
+
+7.3. Timer (optional)
+
+“exam mode” with time limit
+
+7.4. Offline Mode
+
+all tests available without internet connection
+
+⸻
+
+8. UX Requirements (Important)
+
+large buttons (mobile-friendly)
+minimalistic, clean design
+fast navigation between questions
+progress saving (resume after app is closed)
+
+⸻
+
+9. Technical Overview (Simplified)
+
+PDF → parsing → JSON question database
+Local storage (SQLite or local storage)
+UI: one screen = one question
