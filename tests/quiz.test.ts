@@ -8,7 +8,7 @@ import {
   getSessionStats,
   moveToNextQuestion,
 } from "../src/quiz";
-import type { QuizQuestion } from "../src/types";
+import type { OptionId, QuizQuestion, QuizSession } from "../src/types";
 
 const questions: QuizQuestion[] = [
   {
@@ -98,6 +98,90 @@ describe("quiz session", () => {
     });
   });
 
+  it("creates repeatable mistakes-only sessions with independent stats", () => {
+    const reviewQuestions: QuizQuestion[] = [
+      ...questions,
+      {
+        id: "sample-3",
+        sourceId: "sample",
+        sourceTitle: "Sample",
+        number: 3,
+        prompt: "Third question?",
+        correctOptionId: "B",
+        options: [
+          { id: "A", text: "Left" },
+          { id: "B", text: "Right" },
+        ],
+      },
+    ];
+
+    let session = createQuizSession(reviewQuestions, {
+      shuffleQuestions: false,
+      shuffleOptions: false,
+    });
+    session = answerAndCheck(session, "A");
+    session = moveToNextQuestion(session);
+    session = answerAndCheck(session, "A");
+    session = moveToNextQuestion(session);
+    session = answerAndCheck(session, "A");
+
+    const firstReview = createMistakesSession(session);
+
+    expect(firstReview).toMatchObject({
+      title: "Mistakes Review",
+      currentIndex: 0,
+      mode: "mistakes",
+    });
+    expect(firstReview.items.map((item) => item.question.id)).toEqual([
+      "sample-1",
+      "sample-3",
+    ]);
+    expect(getSessionStats(firstReview)).toMatchObject({
+      total: 2,
+      answered: 0,
+      correct: 0,
+      incorrect: 0,
+      percentCorrect: 0,
+    });
+
+    let repeatedReview = answerAndCheck(firstReview, "A");
+    repeatedReview = moveToNextQuestion(repeatedReview);
+    repeatedReview = answerAndCheck(repeatedReview, "B");
+
+    expect(getSessionStats(repeatedReview)).toMatchObject({
+      total: 2,
+      answered: 2,
+      correct: 1,
+      incorrect: 1,
+      percentCorrect: 50,
+    });
+
+    const finalReview = createMistakesSession(repeatedReview);
+
+    expect(finalReview.items.map((item) => item.question.id)).toEqual([
+      "sample-1",
+    ]);
+    expect(getSessionStats(finalReview)).toMatchObject({
+      total: 1,
+      answered: 0,
+      correct: 0,
+      incorrect: 0,
+      percentCorrect: 0,
+    });
+
+    const correctedFinalReview = answerAndCheck(finalReview, "B");
+    const resolvedReview = createMistakesSession(correctedFinalReview);
+
+    expect(getSessionStats(correctedFinalReview)).toMatchObject({
+      total: 1,
+      answered: 1,
+      correct: 1,
+      incorrect: 0,
+      percentCorrect: 100,
+    });
+    expect(resolvedReview.items).toEqual([]);
+  });
+
   it("uses a deterministic random source when shuffling", () => {
     const randomValues = [0.1, 0.1, 0.9];
     const rng = () => {
@@ -120,3 +204,7 @@ describe("quiz session", () => {
     ]);
   });
 });
+
+function answerAndCheck(session: QuizSession, optionId: OptionId): QuizSession {
+  return checkCurrentQuestion(answerCurrentQuestion(session, optionId));
+}

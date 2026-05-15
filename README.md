@@ -22,6 +22,8 @@ The app is fully static. There is no always-running backend server, database, or
 
 Imported PDFs are not uploaded to a server. They stay in the browser on the current device.
 
+`Review Mistakes Only` starts a new mini-test from the questions missed in the just-finished session. If that mini-test still has mistakes, the same button can be used again until there are no missed questions left.
+
 ## Local Development
 
 ```bash
